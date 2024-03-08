@@ -1,0 +1,71 @@
+[gd_resource type="CodeHighlighter" format=3 uid="uid://cfmnwvnrmglab"]
+
+[resource]
+number_color = Color(0.63, 1, 0.87, 1)
+symbol_color = Color(0.74, 0.88, 1, 1)
+function_color = Color(0.34, 0.7, 1, 1)
+member_variable_color = Color(0.74, 0.88, 1, 1)
+keyword_colors = {
+"AABB": Color(0.26, 1, 0.76, 1),
+"Basis": Color(0.26, 1, 0.76, 1),
+"Callable": Color(0.26, 1, 0.76, 1),
+"Color": Color(0.26, 1, 0.76, 1),
+"INF": Color(1, 0.44, 0.52, 1),
+"NAN": Color(1, 0.44, 0.52, 1),
+"Nil": Color(0.26, 1, 0.76, 1),
+"NodePath": Color(0.26, 1, 0.76, 1),
+"Object": Color(0.26, 1, 0.76, 1),
+"PI": Color(1, 0.439216, 0.521569, 1),
+"Plane": Color(0.26, 1, 0.76, 1),
+"Projection": Color(0.26, 1, 0.76, 1),
+"Quaternion": Color(0.26, 1, 0.76, 1),
+"RID": Color(0.26, 1, 0.76, 1),
+"Rect2": Color(0.26, 1, 0.76, 1),
+"Rect2i": Color(0.26, 1, 0.76, 1),
+"String": Color(0.26, 1, 0.76, 1),
+"StringName": Color(0.26, 1, 0.76, 1),
+"TAU": Color(1, 0.44, 0.52, 1),
+"Transform2D": Color(0.26, 1, 0.76, 1),
+"Transform3D": Color(0.26, 1, 0.76, 1),
+"Vector2": Color(0.26, 1, 0.76, 1),
+"Vector2i": Color(0.26, 1, 0.76, 1),
+"Vector3": Color(0.26, 1, 0.76, 1),
+"Vector3i": Color(0.26, 1, 0.76, 1),
+"Vector4": Color(0.26, 1, 0.76, 1),
+"Vector4i": Color(0.26, 1, 0.76, 1),
+"and": Color(1, 0.44, 0.52, 1),
+"bool": Color(0.26, 1, 0.76, 1),
+"break": Color(1, 0.55, 0.8, 1),
+"breakpoint": Color(1, 0.44, 0.52, 1),
+"class": Color(1, 0.44, 0.52, 1),
+"class_name": Color(1, 0.44, 0.52, 1),
+"const": Color(1, 0.44, 0.52, 1),
+"continue": Color(1, 0.55, 0.8, 1),
+"elif": Color(1, 0.55, 0.8, 1),
+"extends": Color(1, 0.44, 0.52, 1),
+"false": Color(1, 0.44, 0.52, 1),
+"float": Color(0.26, 1, 0.76, 1),
+"for": Color(1, 0.55, 0.8, 1),
+"frame": Color(1, 1, 0, 1),
+"func": Color(1, 0.44, 0.52, 1),
+"hz": Color(1, 1, 0, 1),
+"if": Color(1, 0.55, 0.8, 1),
+"in": Color(1, 0.44, 0.52, 1),
+"increment": Color(1, 1, 0, 1),
+"int": Color(0.26, 1, 0.76, 1),
+"match": Color(1, 0.55, 0.8, 1),
+"or": Color(1, 0.44, 0.52, 1),
+"phase": Color(1, 1, 0, 1),
+"self": Color(1, 0.44, 0.52, 1),
+"static": Color(1, 0.44, 0.52, 1),
+"time": Color(1, 1, 0, 1),
+"time_end": Color(1, 1, 0, 1),
+"time_start": Color(1, 1, 0, 1),
+"true": Color(1, 0.44, 0.52, 1),
+"var": Color(1, 0.44, 0.52, 1),
+"while": Color(1, 0.55, 0.8, 1)
+}
+color_regions = {
+"\" \"": Color(1, 0.929412, 0.631373, 1),
+"' '": Color(1, 0.929412, 0.631373, 1)
+}
