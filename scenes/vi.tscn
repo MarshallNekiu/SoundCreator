@@ -66,46 +66,62 @@ offset_right = 800.0
 offset_bottom = 64.0
 text = "Remove"
 
-[node name="Volume" type="HSlider" parent="UI"]
-offset_left = 928.0
-offset_top = 992.0
-offset_right = 1312.0
-offset_bottom = 1056.0
+[node name="Volume" type="VSlider" parent="UI"]
+offset_left = 1824.0
+offset_top = 704.0
+offset_right = 1856.0
+offset_bottom = 1024.0
 max_value = 24.0
 step = 0.01
 
 [node name="Text" type="Button" parent="UI/Volume"]
 layout_mode = 0
-offset_left = 128.0
-offset_top = -64.0
-offset_right = 256.0
+offset_left = -32.0
+offset_top = -96.0
+offset_right = 64.0
+offset_bottom = -32.0
 text = "0"
 
 [node name="Frequency" type="HSlider" parent="UI"]
-offset_left = 1504.0
+offset_left = 928.0
 offset_top = 992.0
-offset_right = 1888.0
+offset_right = 1728.0
 offset_bottom = 1056.0
 
 [node name="Text" type="LineEdit" parent="UI/Frequency"]
 layout_mode = 0
-offset_left = 64.0
 offset_top = -64.0
-offset_right = 192.0
+offset_right = 128.0
 text = "440.0"
 alignment = 1
 
 [node name="Tone" type="OptionButton" parent="UI/Frequency"]
 layout_mode = 0
-offset_left = 192.0
+offset_left = 128.0
 offset_top = -64.0
-offset_right = 320.0
+offset_right = 256.0
+
+[node name="MixRate" type="HSlider" parent="UI"]
+offset_left = 928.0
+offset_top = 864.0
+offset_right = 1728.0
+offset_bottom = 928.0
+min_value = 5.0
+max_value = 44100.0
+step = 5.0
+value = 22050.0
+
+[node name="Text" type="Button" parent="UI/MixRate"]
+layout_mode = 0
+offset_top = -64.0
+offset_right = 128.0
+text = "22050"
 
 [node name="Connection" type="LineEdit" parent="UI"]
 offset_left = 736.0
 offset_top = 864.0
 offset_right = 864.0
-offset_bottom = 896.0
+offset_bottom = 912.0
 placeholder_text = "Connection"
 
 [connection signal="child_entered_tree" from="SubBlocks" to="." method="_on_sub_blocks_child_entered_tree"]
@@ -114,4 +130,8 @@ placeholder_text = "Connection"
 [connection signal="pressed" from="UI/Track/New" to="." method="_on_new_pressed"]
 [connection signal="pressed" from="UI/Track/Remove" to="." method="_on_remove_pressed"]
 [connection signal="value_changed" from="UI/Volume" to="UI" method="_on_volume_value_changed"]
+[connection signal="value_changed" from="UI/Frequency" to="UI" method="_on_frequency_value_changed"]
+[connection signal="text_submitted" from="UI/Frequency/Text" to="UI" method="_on_frequency_text_submitted"]
+[connection signal="item_selected" from="UI/Frequency/Tone" to="UI" method="_on_frequency_value_changed"]
+[connection signal="value_changed" from="UI/MixRate" to="UI" method="_on_mix_rate_value_changed"]
 [connection signal="text_submitted" from="UI/Connection" to="." method="_on_connection_text_submitted"]

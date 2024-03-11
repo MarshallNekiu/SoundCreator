@@ -16,25 +16,6 @@ corner_radius_bottom_left = 8
 expand_margin_left = 4.0
 expand_margin_right = 4.0
 
-[sub_resource type="ImageTexture" id="ImageTexture_mshfk"]
-
-[sub_resource type="ImageTexture" id="ImageTexture_fiudi"]
-
-[sub_resource type="ImageTexture" id="ImageTexture_k6lru"]
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_g0q7t"]
-content_margin_top = 0.0
-grow_begin = -2.0
-grow_end = -2.0
-thickness = 8
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_a0nvv"]
-content_margin_top = 0.0
-color = Color(1, 1, 1, 1)
-grow_begin = -2.0
-grow_end = -2.0
-thickness = 8
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rab73"]
 bg_color = Color(0, 0, 0, 1)
 border_width_left = 2
@@ -89,6 +70,25 @@ border_width_bottom = 2
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
+[sub_resource type="ImageTexture" id="ImageTexture_mshfk"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_fiudi"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_k6lru"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_g0q7t"]
+content_margin_top = 0.0
+grow_begin = -2.0
+grow_end = -2.0
+thickness = 8
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_a0nvv"]
+content_margin_top = 0.0
+color = Color(1, 1, 1, 1)
+grow_begin = -2.0
+grow_end = -2.0
+thickness = 8
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_70fmk"]
 content_margin_bottom = 0.0
 bg_color = Color(0, 0, 0, 1)
@@ -123,18 +123,6 @@ layout_mode = 0
 offset_right = 192.0
 offset_bottom = 192.0
 theme_override_constants/separation = 2
-
-[node name="Track" type="HSlider" parent="Box"]
-custom_minimum_size = Vector2(0, 24)
-layout_mode = 2
-theme_override_icons/grabber = SubResource("ImageTexture_mshfk")
-theme_override_icons/grabber_highlight = SubResource("ImageTexture_fiudi")
-theme_override_icons/grabber_disabled = SubResource("ImageTexture_k6lru")
-theme_override_styles/slider = SubResource("StyleBoxLine_g0q7t")
-theme_override_styles/grabber_area = SubResource("StyleBoxLine_a0nvv")
-max_value = 1.0
-step = 0.01
-editable = false
 
 [node name="Name" type="Button" parent="Box"]
 custom_minimum_size = Vector2(0, 32)
@@ -198,22 +186,46 @@ offset_bottom = 31.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_2c15y")
 text = "+"
 
+[node name="Timer" type="Node2D" parent="."]
+
+[node name="Timer" type="Timer" parent="Timer"]
+one_shot = true
+
 [node name="Generator" parent="." instance=ExtResource("2_nwvgm")]
 
+[node name="Track" type="HSlider" parent="Generator"]
+custom_minimum_size = Vector2(0, 24)
+offset_top = 160.0
+offset_right = 192.0
+offset_bottom = 184.0
+theme_override_icons/grabber = SubResource("ImageTexture_mshfk")
+theme_override_icons/grabber_highlight = SubResource("ImageTexture_fiudi")
+theme_override_icons/grabber_disabled = SubResource("ImageTexture_k6lru")
+theme_override_styles/slider = SubResource("StyleBoxLine_g0q7t")
+theme_override_styles/grabber_area = SubResource("StyleBoxLine_a0nvv")
+max_value = 1.0
+step = 0.01
+editable = false
+
 [node name="Connected" type="Button" parent="."]
-modulate = Color(1, 0, 0, 1)
+modulate = Color(0, 1, 0, 1)
 layout_mode = 0
 offset_left = 160.0
 offset_top = -32.0
 offset_right = 192.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_70fmk")
 toggle_mode = true
+button_pressed = true
 text = "-))"
 
 [connection signal="start" from="." to="." method="_start"]
-[connection signal="button_down" from="Box/Name" to="." method="_on_name_button_down"]
+[connection signal="button_down" from="Box/Name" to="." method="_on_move_button_down"]
 [connection signal="pressed" from="Box/Name" to="." method="play"]
-[connection signal="pressed" from="Box/Values" to="." method="create"]
+[connection signal="pressed" from="Box/Name" to="." method="focus"]
+[connection signal="button_down" from="Box/Values" to="." method="_on_move_button_down"]
+[connection signal="pressed" from="Box/Values" to="." method="focus"]
+[connection signal="child_entered_tree" from="Box/ScrollBox/VBox" to="." method="_on_v_box_child_entered_tree"]
 [connection signal="child_entered_tree" from="Box/ScrollBox/VBox/HBox" to="." method="_on_h_box_child_entered_tree"]
+[connection signal="pressed" from="Box/ScrollBox/VBox/Control/Add" to="." method="create"]
 [connection signal="mouse_entered" from="Connected" to="." method="_on_connected_mouse_entered"]
 [connection signal="toggled" from="Connected" to="." method="_on_connected_toggled"]
