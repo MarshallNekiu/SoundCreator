@@ -192,6 +192,7 @@ text = "+"
 one_shot = true
 
 [node name="Generator" parent="." instance=ExtResource("2_nwvgm")]
+max_polyphony = 2
 
 [node name="Track" type="HSlider" parent="Generator"]
 custom_minimum_size = Vector2(0, 24)

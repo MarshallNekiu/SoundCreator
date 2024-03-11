@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://dfbjrr0wqcr15"]
+[gd_scene load_steps=5 format=3 uid="uid://dfbjrr0wqcr15"]
 
 [ext_resource type="Script" path="res://scripts/sub_control.gd" id="1_vb3an"]
 [ext_resource type="PackedScene" uid="uid://ufxo30soh08n" path="res://scenes/sub.tscn" id="2_yksqv"]
 [ext_resource type="Script" path="res://scripts/vi_ui.gd" id="3_3whna"]
+[ext_resource type="CodeHighlighter" uid="uid://cfmnwvnrmglab" path="res://data/code_syntax.tres" id="4_n2fws"]
 
 [node name="VI" type="Control"]
 layout_mode = 3
@@ -22,9 +23,16 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Default" parent="SubBlocks" instance=ExtResource("2_yksqv")]
-offset_left = 928.0
+offset_left = 768.0
 offset_top = 416.0
-offset_right = 1120.0
+offset_right = 960.0
+offset_bottom = 608.0
+
+[node name="Default2" parent="SubBlocks" instance=ExtResource("2_yksqv")]
+modulate = Color(0.5, 0.5, 0.5, 1)
+offset_left = 1088.0
+offset_top = 416.0
+offset_right = 1280.0
 offset_bottom = 608.0
 
 [node name="UI" type="CanvasLayer" parent="."]
@@ -122,7 +130,30 @@ offset_left = 736.0
 offset_top = 864.0
 offset_right = 864.0
 offset_bottom = 912.0
+text = "Default2"
 placeholder_text = "Connection"
+
+[node name="Code" type="Button" parent="."]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 704.0
+offset_right = 96.0
+offset_bottom = 768.0
+toggle_mode = true
+text = "Code"
+
+[node name="Text" type="CodeEdit" parent="Code"]
+layout_mode = 0
+offset_top = 64.0
+offset_right = 640.0
+offset_bottom = 192.0
+text = "sin(phase * TAU) * exp(-time)"
+syntax_highlighter = ExtResource("4_n2fws")
+highlight_current_line = true
+gutters_draw_line_numbers = true
+indent_automatic = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
 
 [connection signal="child_entered_tree" from="SubBlocks" to="." method="_on_sub_blocks_child_entered_tree"]
 [connection signal="value_changed" from="UI/Track" to="UI" method="_on_track_value_changed"]
