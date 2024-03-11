@@ -2,7 +2,7 @@ extends AudioStreamPlayer2D
 
 
 var vol := false
-var frame:int = 0
+var frame := 0
 var executer := Expression.new()
 var hz := 440.0
 var phase:float = 0
@@ -22,7 +22,7 @@ func _process(_delta):
 
 func fill_buffer():
 	frame += 1
-	time = time_end - $Time.time_left
+	time = time_start + time_end - $Time.time_left
 	
 	for i in range(get_stream_playback().get_frames_available()):
 		
@@ -31,11 +31,13 @@ func fill_buffer():
 		get_stream_playback().push_frame(Vector2.ONE * equation)
 		
 		phase = fmod(phase + increment, 1.0)
+	
+	$Track.value = time
 
 
 func create_track():
-	increment = hz / (stream.mix_rate * 2)
-	frame = 0
+	increment = hz / (stream.mix_rate)
+	frame = -1
 	$Time.start(time_end - time_start)
 	vol = true
 

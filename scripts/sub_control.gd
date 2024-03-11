@@ -4,12 +4,16 @@ extends Control
 
 
 func _on_sub_blocks_child_entered_tree(node: Control):
-	node.get_node("Box/Name").connect("pressed", func ():
-		sub.modulate = Color.GRAY
-		sub = node
-		refresh_values(sub.get_node("Box/Values").text)
-		sub.modulate = Color.WHITE
-		)
+	for i in ["Box/Name", "Box/Values"]:
+		node.get_node(i).connect("pressed", func ():
+			if not is_instance_valid(sub): return
+			sub.modulate = Color.GRAY
+			sub = node
+			refresh_values(sub.get_node("Box/Values").text)
+			sub.modulate = Color.WHITE
+			)
+	
+	node.get_node("Box/Values").emit_signal("pressed")
 	
 	node.get_node("Box/ScrollBox/VBox/HBox/Control/Add").connect("pressed", func(): node.call("add_connection", $UI/Connection.text))
 
