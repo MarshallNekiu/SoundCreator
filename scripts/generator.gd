@@ -13,6 +13,8 @@ var time:float = 0
 
 
 func _init():
+	AudioServer.add_bus(-1)
+	bus = AudioServer.get_bus_name(-1)
 	executer.parse("sin(phase * TAU) * exp(-time)")
 
 
@@ -22,7 +24,7 @@ func _process(_delta):
 
 func fill_buffer():
 	frame += 1
-	time = time_start + time_end - $Time.time_left
+	time = time_end - $Time.time_left
 	
 	for i in range(get_stream_playback().get_frames_available()):
 		
@@ -39,10 +41,12 @@ func create_track():
 	increment = hz / (stream.mix_rate)
 	frame = -1
 	$Time.start(time_end - time_start)
+	process_mode = Node.PROCESS_MODE_INHERIT
 	vol = true
 
 
 func _on_timer_timeout():
+	process_mode = Node.PROCESS_MODE_DISABLED
 	vol = false
 
 

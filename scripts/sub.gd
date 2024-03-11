@@ -10,22 +10,22 @@ signal start()
 
 func _ready():
 	$Box/Name.text = name
+	$Box/ScrollBox/VBox/HBox/Connection.text = name
 	create()
 
 
 func set_values(vals: Vector4, mix_rate: float):
-	$Generator.time_start = vals.x
-	$Generator.time_end = vals.y
-	$Generator/Track.max_value = vals.y
-	$Generator.hz = vals.z
-	$Generator.volume_db = vals.w
+	$Generator.time_start = str("%.2f" % vals.x).to_float()
+	$Generator.time_end = str("%.2f" % vals.y).to_float()
+	$Generator/Track.max_value = str("%.2f" % vals.y).to_float()
+	$Generator.hz = str("%.4f" % vals.z).to_float()
+	$Generator.volume_db = str("%.2f" % vals.w).to_float()
 	if mix_rate: $Generator.stream.mix_rate = mix_rate
 	
 	$Box/Values.text = str(vals)
 
 
 func focus():
-	modulate = Color.WHITE
 	emit_signal("focused")
 
 
@@ -45,7 +45,7 @@ func create():
 	for i in connections:
 		var time := Timer.new()
 		time.name = "Timer - " + i
-		time.wait_time = i.to_float() - 0.01
+		time.wait_time = i.to_float()
 		time.one_shot = true
 		start.connect(time.start)
 		
@@ -56,8 +56,7 @@ func create():
 
 
 func play():
-	await $Generator.call("create_track")
-	
+	$Generator.call("create_track")
 	emit_signal("start")
 
 
@@ -81,7 +80,7 @@ func add_connection(node: String, HBox: HBoxContainer):
 func _on_h_box_child_entered_tree(node: Control):
 	if node.name == "Time": node.connect("text_submitted", func(new_text: String): create())
 	
-	if node.name == "Control": node.connect("pressed", func(): create())
+	if node.name == "Control": node.get_node("Add").connect("pressed", func(): create())
 	
 	if node.is_in_group("Connection"):
 		node.connect("pressed", func ():

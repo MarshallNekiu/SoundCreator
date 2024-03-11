@@ -16,27 +16,23 @@ func _ready():
 	$Frequency.value = frequency.size() / 2
 
 
+func change_values():
+	owner.sub.call("set_values", Vector4($Track/Start.text.to_float(), $Track/End.text.to_float(), $Frequency/Text.text.to_float(), $Volume.value), $MixRate.value)
+
+
 func _on_track_value_changed(value: float):
-	$Track.set_value_no_signal(("%.2f" % value).to_float())
 	$Track/Start.text = "%.2f" % value
-	var x = owner.sub.get_node("Box/Values").text.split(",")
-	x[0] = str(value)
-	owner.sub.get_node("Box/Values").text = str(Vector4(x[0].to_float(), x[1].to_float(), x[2].to_float(), x[3].to_float()))
+	change_values()
 
 
 func _on_end_text_submitted(new_text: String):
 	if not new_text.is_valid_float(): return
-	new_text = "%.3f" % new_text.to_float()
 	$Track.max_value = new_text.to_float()
-	var x = owner.sub.get_node("Box/Values").text.split(",")
-	x[1] = new_text
-	owner.sub.get_node("Box/Values").text = str(Vector4(x[0].to_float(), x[1].to_float(), x[2].to_float(), x[3].to_float()))
+	change_values()
 
 
 func _on_volume_value_changed(value: float):
-	var x = owner.sub.get_node("Box/Values").text.split(",")
-	x[3] = str(value)
-	owner.sub.get_node("Box/Values").text = str(Vector4(x[0].to_float(), x[1].to_float(), x[2].to_float(), x[3].to_float()))
+	change_values()
 	$Volume/Text.text = str(value)
 
 
@@ -50,16 +46,12 @@ func _on_frequency_value_changed(value):
 
 func _on_frequency_text_submitted(new_text):
 	if not new_text.is_valid_float() or not is_instance_valid(owner.sub): return
-	new_text = "%.3f" % new_text.to_float()
-	var x = owner.sub.get_node("Box/Values").text.split(",")
-	x[2] = new_text
-	owner.sub.get_node("Box/Values").text = str(Vector4(x[0].to_float(), x[1].to_float(), x[2].to_float(), x[3].to_float()))
-	owner.sub.get_node("Generator").hz = new_text.to_float()
+	change_values()
 
 
 func _on_mix_rate_value_changed(value):
 	$MixRate/Text.text = str(value)
-	owner.sub.get_node("Generator").stream.mix_rate = value
+	change_values()
 
 
 
