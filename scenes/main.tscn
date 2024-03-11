@@ -1,25 +1,23 @@
 [gd_scene load_steps=8 format=3 uid="uid://cy5kob0wdcbij"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_0o57m"]
-[ext_resource type="Script" path="res://scripts/generator.gd" id="2_hoa3v"]
 [ext_resource type="Script" path="res://scripts/ui.gd" id="3_4kk67"]
+[ext_resource type="PackedScene" uid="uid://dwtvejcieqhln" path="res://scenes/sub_hbox.tscn" id="4_j5wwu"]
 [ext_resource type="CodeHighlighter" uid="uid://cfmnwvnrmglab" path="res://data/code_syntax.tres" id="4_n0dwm"]
+[ext_resource type="PackedScene" uid="uid://ufxo30soh08n" path="res://scenes/sub.tscn" id="6_522j2"]
+[ext_resource type="PackedScene" uid="uid://cqqis8hp5sl0g" path="res://scenes/file_hbox.tscn" id="6_yg2rp"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hox67"]
 radius = 8.0
-
-[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_ekvdj"]
-mix_rate = 22050.0
-buffer_length = 0.15
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_rdvkj"]
-size = Vector2(768, 32)
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_0o57m")
 metadata/_edit_vertical_guides_ = [-608.0, -576.0, -1952.0]
 
-[node name="Label" type="Label" parent="."]
+[node name="Camera" type="Camera2D" parent="."]
+anchor_mode = 0
+
+[node name="Label" type="Label" parent="Camera"]
 top_level = true
 offset_left = 32.0
 offset_top = 32.0
@@ -31,8 +29,21 @@ Effect: Normal
 horizontal_alignment = 2
 text_direction = 2
 
-[node name="Camera" type="Camera2D" parent="."]
-anchor_mode = 0
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera"]
+offset_left = 32.0
+offset_top = 32.0
+offset_right = 1055.0
+offset_bottom = 320.0
+vertical_scroll_mode = 3
+
+[node name="Debug" type="VBoxContainer" parent="Camera/ScrollContainer"]
+unique_name_in_owner = true
+modulate = Color(0.717647, 0.741176, 0.317647, 1)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Camera/ScrollContainer/Debug"]
+layout_mode = 2
+text = "Debug"
 
 [node name="Mouse" type="Area2D" parent="."]
 
@@ -41,56 +52,44 @@ shape = SubResource("CircleShape2D_hox67")
 
 [node name="Audio" type="Node2D" parent="."]
 
-[node name="Main" type="AudioStreamPlayer2D" parent="Audio"]
-process_mode = 3
-stream = SubResource("AudioStreamGenerator_ekvdj")
-autoplay = true
-script = ExtResource("2_hoa3v")
-
-[node name="Time" type="Timer" parent="Audio/Main"]
-one_shot = true
-
 [node name="UI" type="Node2D" parent="."]
 script = ExtResource("3_4kk67")
 metadata/_edit_vertical_guides_ = [320.0, -64.0, -128.0]
 
-[node name="Track" type="TabContainer" parent="UI"]
-offset_top = 32.0
-offset_right = 1024.0
-offset_bottom = 768.0
-tab_alignment = 1
-
-[node name="Main" type="Control" parent="UI/Track"]
-layout_mode = 2
-
-[node name="Configs" type="Control" parent="UI/Track/Main"]
-layout_mode = 2
-anchors_preset = 0
+[node name="Configs" type="Control" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 417.0
+offset_left = -1056.0
+offset_top = 224.0
+offset_right = -1056.0
+offset_bottom = 224.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Frequency" type="HSlider" parent="UI/Track/Main/Configs"]
+[node name="Frequency" type="HSlider" parent="UI/Configs"]
 layout_mode = 0
 offset_left = 608.0
 offset_top = 192.0
 offset_right = 992.0
 offset_bottom = 256.0
 
-[node name="Text" type="LineEdit" parent="UI/Track/Main/Configs/Frequency"]
+[node name="Text" type="LineEdit" parent="UI/Configs/Frequency"]
 layout_mode = 0
 offset_top = -64.0
 offset_right = 128.0
 text = "440.0"
 alignment = 1
 
-[node name="Tone" type="OptionButton" parent="UI/Track/Main/Configs/Frequency"]
+[node name="Tone" type="OptionButton" parent="UI/Configs/Frequency"]
 layout_mode = 0
 offset_left = 128.0
 offset_top = -64.0
 offset_right = 256.0
 
-[node name="Volume" type="HSlider" parent="UI/Track/Main/Configs"]
+[node name="Volume" type="HSlider" parent="UI/Configs"]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 192.0
@@ -98,7 +97,7 @@ offset_right = 416.0
 offset_bottom = 256.0
 max_value = 24.0
 
-[node name="Text" type="LineEdit" parent="UI/Track/Main/Configs/Volume"]
+[node name="Text" type="LineEdit" parent="UI/Configs/Volume"]
 layout_mode = 0
 offset_left = 256.0
 offset_top = -64.0
@@ -106,7 +105,20 @@ offset_right = 384.0
 text = "0"
 alignment = 1
 
-[node name="Main" type="HSlider" parent="UI/Track/Main"]
+[node name="Main" type="Control" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -32.0
+offset_top = 32.0
+offset_right = -32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Main" type="HSlider" parent="UI/Main"]
 layout_mode = 0
 offset_left = 192.0
 offset_top = 353.0
@@ -115,14 +127,14 @@ offset_bottom = 417.0
 max_value = 1.0
 step = 0.01
 
-[node name="Start" type="LineEdit" parent="UI/Track/Main/Main"]
+[node name="Start" type="LineEdit" parent="UI/Main/Main"]
 layout_mode = 0
 offset_top = -64.0
 offset_right = 128.0
 text = "0.0"
 alignment = 1
 
-[node name="End" type="LineEdit" parent="UI/Track/Main/Main"]
+[node name="End" type="LineEdit" parent="UI/Main/Main"]
 layout_mode = 0
 offset_left = 512.0
 offset_top = -64.0
@@ -130,7 +142,7 @@ offset_right = 640.0
 text = "1.0"
 alignment = 1
 
-[node name="Save" type="Button" parent="UI/Track/Main"]
+[node name="Save" type="Button" parent="UI/Main"]
 layout_mode = 0
 offset_left = 864.0
 offset_top = 353.0
@@ -138,7 +150,7 @@ offset_right = 992.0
 offset_bottom = 417.0
 text = "Q.Save"
 
-[node name="Test" type="Button" parent="UI/Track/Main"]
+[node name="Test" type="Button" parent="UI/Main"]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 353.0
@@ -146,7 +158,7 @@ offset_right = 160.0
 offset_bottom = 417.0
 text = "Test"
 
-[node name="SubStart" type="HSlider" parent="UI/Track/Main"]
+[node name="SubStart" type="HSlider" parent="UI/Main"]
 layout_mode = 0
 offset_left = 192.0
 offset_top = 161.0
@@ -155,7 +167,7 @@ offset_bottom = 193.0
 max_value = 1.0
 step = 0.01
 
-[node name="Text" type="LineEdit" parent="UI/Track/Main/SubStart"]
+[node name="Text" type="LineEdit" parent="UI/Main/SubStart"]
 layout_mode = 0
 offset_top = -96.0
 offset_right = 128.0
@@ -163,7 +175,7 @@ offset_bottom = -32.0
 text = "0.0"
 alignment = 1
 
-[node name="Label" type="Label" parent="UI/Track/Main"]
+[node name="Label" type="Label" parent="UI/Main"]
 self_modulate = Color(0.7, 0.7, 0.7, 1)
 layout_mode = 0
 offset_left = 32.0
@@ -174,7 +186,7 @@ text = "SUB"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SubEnd" type="HSlider" parent="UI/Track/Main"]
+[node name="SubEnd" type="HSlider" parent="UI/Main"]
 layout_mode = 0
 offset_left = 192.0
 offset_top = 193.0
@@ -184,7 +196,7 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="Text" type="LineEdit" parent="UI/Track/Main/SubEnd"]
+[node name="Text" type="LineEdit" parent="UI/Main/SubEnd"]
 layout_mode = 0
 offset_left = 512.0
 offset_top = -128.0
@@ -193,7 +205,7 @@ offset_bottom = -64.0
 text = "1.0"
 alignment = 1
 
-[node name="Add" type="Button" parent="UI/Track/Main"]
+[node name="Add" type="Button" parent="UI/Main"]
 layout_mode = 2
 offset_left = 864.0
 offset_top = 161.0
@@ -201,49 +213,38 @@ offset_right = 992.0
 offset_bottom = 225.0
 text = "Add"
 
-[node name="Sub" type="Control" parent="UI/Track"]
-visible = false
-layout_mode = 2
+[node name="Sub" type="Control" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -928.0
+offset_top = -672.0
+offset_right = -928.0
+offset_bottom = -672.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Line2D" type="Line2D" parent="UI/Track/Sub"]
+[node name="Line2D" type="Line2D" parent="UI/Sub"]
 position = Vector2(8, 41)
 points = PackedVector2Array(0, 0, 4, 4, 0, 8)
 width = 4.0
 
-[node name="Scroll" type="ScrollContainer" parent="UI/Track/Sub"]
+[node name="Scroll" type="ScrollContainer" parent="UI/Sub"]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 32.0
 offset_right = 768.0
 offset_bottom = 416.0
 
-[node name="VBox" type="VBoxContainer" parent="UI/Track/Sub/Scroll"]
+[node name="VBox" type="VBoxContainer" parent="UI/Sub/Scroll"]
 layout_mode = 2
 
-[node name="Default" type="HBoxContainer" parent="UI/Track/Sub/Scroll/VBox"]
+[node name="Default" parent="UI/Sub/Scroll/VBox" instance=ExtResource("4_j5wwu")]
 layout_mode = 2
 
-[node name="Area" type="Area2D" parent="UI/Track/Sub/Scroll/VBox/Default"]
-
-[node name="Collision" type="CollisionShape2D" parent="UI/Track/Sub/Scroll/VBox/Default/Area"]
-position = Vector2(384, 16)
-shape = SubResource("RectangleShape2D_rdvkj")
-
-[node name="Name" type="LineEdit" parent="UI/Track/Sub/Scroll/VBox/Default"]
-layout_mode = 2
-text = "Default"
-expand_to_text_length = true
-deselect_on_focus_loss_enabled = false
-select_all_on_focus = true
-
-[node name="Values" type="LineEdit" parent="UI/Track/Sub/Scroll/VBox/Default"]
-layout_mode = 2
-text = "(0, 1, 440.0, 0)"
-expand_to_text_length = true
-deselect_on_focus_loss_enabled = false
-select_all_on_focus = true
-
-[node name="New" type="Button" parent="UI/Track/Sub"]
+[node name="New" type="Button" parent="UI/Sub"]
 layout_mode = 0
 offset_left = 800.0
 offset_top = 33.0
@@ -251,7 +252,7 @@ offset_right = 928.0
 offset_bottom = 97.0
 text = "New"
 
-[node name="Toggle" type="Button" parent="UI/Track/Sub"]
+[node name="Toggle" type="Button" parent="UI/Sub"]
 layout_mode = 0
 offset_left = 800.0
 offset_top = 161.0
@@ -259,7 +260,7 @@ offset_right = 928.0
 offset_bottom = 225.0
 text = "Toggle"
 
-[node name="Remove" type="Button" parent="UI/Track/Sub"]
+[node name="Remove" type="Button" parent="UI/Sub"]
 layout_mode = 0
 offset_left = 800.0
 offset_top = 289.0
@@ -267,7 +268,7 @@ offset_right = 992.0
 offset_bottom = 353.0
 text = "Remove"
 
-[node name="Code" type="CodeEdit" parent="UI/Track/Sub"]
+[node name="Code" type="CodeEdit" parent="UI/Sub"]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 545.0
@@ -282,7 +283,7 @@ indent_automatic = true
 auto_brace_completion_enabled = true
 auto_brace_completion_highlight_matching = true
 
-[node name="Update" type="Button" parent="UI/Track/Sub"]
+[node name="Update" type="Button" parent="UI/Sub"]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 481.0
@@ -290,52 +291,35 @@ offset_right = 224.0
 offset_bottom = 545.0
 text = "Update"
 
-[node name="File" type="Control" parent="UI/Track"]
-visible = false
-layout_mode = 2
+[node name="File" type="Control" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 544.0
+offset_top = -544.0
+offset_right = 544.0
+offset_bottom = -544.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Scroll" type="ScrollContainer" parent="UI/Track/File"]
+[node name="Scroll" type="ScrollContainer" parent="UI/File"]
 self_modulate = Color(0, 0, 0, 1)
 layout_mode = 0
 offset_left = 32.0
 offset_top = 33.0
 offset_right = 768.0
-offset_bottom = 673.0
+offset_bottom = 417.0
 follow_focus = true
 
-[node name="VBox" type="VBoxContainer" parent="UI/Track/File/Scroll"]
+[node name="VBox" type="VBoxContainer" parent="UI/File/Scroll"]
 layout_mode = 2
 
-[node name="Default" type="HBoxContainer" parent="UI/Track/File/Scroll/VBox"]
+[node name="Default" parent="UI/File/Scroll/VBox" instance=ExtResource("6_yg2rp")]
 layout_mode = 2
 
-[node name="Area" type="Area2D" parent="UI/Track/File/Scroll/VBox/Default"]
-
-[node name="Collision" type="CollisionShape2D" parent="UI/Track/File/Scroll/VBox/Default/Area"]
-position = Vector2(384, 16)
-shape = SubResource("RectangleShape2D_rdvkj")
-
-[node name="Name" type="LineEdit" parent="UI/Track/File/Scroll/VBox/Default"]
-layout_mode = 2
-text = "Default"
-expand_to_text_length = true
-
-[node name="DefaultValues" type="LineEdit" parent="UI/Track/File/Scroll/VBox/Default"]
-layout_mode = 2
-text = "(0, 1, 440, 0)"
-editable = false
-expand_to_text_length = true
-virtual_keyboard_enabled = false
-
-[node name="ValuesCount" type="LineEdit" parent="UI/Track/File/Scroll/VBox/Default"]
-layout_mode = 2
-text = "1"
-alignment = 1
-editable = false
-expand_to_text_length = true
-virtual_keyboard_enabled = false
-
-[node name="New" type="Button" parent="UI/Track/File"]
+[node name="New" type="Button" parent="UI/File"]
 layout_mode = 0
 offset_left = 800.0
 offset_top = 33.0
@@ -343,7 +327,7 @@ offset_right = 928.0
 offset_bottom = 97.0
 text = "New"
 
-[node name="Remove" type="Button" parent="UI/Track/File"]
+[node name="Remove" type="Button" parent="UI/File"]
 layout_mode = 0
 offset_left = 800.0
 offset_top = 289.0
@@ -351,7 +335,7 @@ offset_right = 992.0
 offset_bottom = 353.0
 text = "Remove"
 
-[node name="Load" type="Button" parent="UI/Track/File"]
+[node name="Load" type="Button" parent="UI/File"]
 layout_mode = 0
 offset_left = 800.0
 offset_top = 193.0
@@ -359,7 +343,7 @@ offset_right = 928.0
 offset_bottom = 257.0
 text = "Load"
 
-[node name="Save" type="Button" parent="UI/Track/File"]
+[node name="Save" type="Button" parent="UI/File"]
 layout_mode = 0
 offset_left = 800.0
 offset_top = 129.0
@@ -367,34 +351,73 @@ offset_right = 928.0
 offset_bottom = 193.0
 text = "Save"
 
-[node name="Line2D" type="Line2D" parent="UI/Track/File"]
+[node name="Line2D" type="Line2D" parent="UI/File"]
 position = Vector2(16, 48)
 points = PackedVector2Array(0, 0, 4, 4, 0, 8)
 width = 4.0
 
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 1120.0
+offset_top = 64.0
+offset_right = 1160.0
+offset_bottom = 104.0
+
+[node name="Default" parent="Control" instance=ExtResource("6_522j2")]
+layout_mode = 0
+offset_bottom = 96.0
+
+[node name="Sub" type="VBoxContainer" parent="Control"]
+layout_mode = 0
+offset_left = 224.0
+offset_right = 407.0
+offset_bottom = 66.0
+
+[node name="Name" type="Button" parent="Control/Sub"]
+layout_mode = 2
+text = "SubAfter"
+
+[node name="Values" type="Button" parent="Control/Sub"]
+layout_mode = 2
+text = "(0, 1, 440.0, 0)"
+
+[node name="Sub2" type="VBoxContainer" parent="Control"]
+layout_mode = 0
+offset_left = 224.0
+offset_top = 96.0
+offset_right = 407.0
+offset_bottom = 162.0
+
+[node name="Name" type="Button" parent="Control/Sub2"]
+layout_mode = 2
+text = "SubWhile"
+
+[node name="Values" type="Button" parent="Control/Sub2"]
+layout_mode = 2
+text = "(0, 1, 440.0, 0)"
+
 [connection signal="area_entered" from="Mouse" to="." method="_on_mouse_area_entered"]
-[connection signal="timeout" from="Audio/Main/Time" to="Audio/Main" method="_on_timer_timeout"]
-[connection signal="tab_selected" from="UI/Track" to="UI" method="_on_track_tab_selected"]
-[connection signal="value_changed" from="UI/Track/Main/Configs/Frequency" to="UI" method="_on_frequency_value_changed"]
-[connection signal="item_selected" from="UI/Track/Main/Configs/Frequency/Tone" to="UI" method="_on_tone_item_selected"]
-[connection signal="value_changed" from="UI/Track/Main/Configs/Volume" to="UI" method="_on_volume_value_changed"]
-[connection signal="text_submitted" from="UI/Track/Main/Configs/Volume/Text" to="UI" method="_on_volume_text_submitted"]
-[connection signal="value_changed" from="UI/Track/Main/Main" to="UI" method="_on_main_value_changed"]
-[connection signal="text_submitted" from="UI/Track/Main/Main/Start" to="UI" method="_on_main_start_text_submitted"]
-[connection signal="text_submitted" from="UI/Track/Main/Main/End" to="UI" method="_on_main_end_text_submitted"]
-[connection signal="pressed" from="UI/Track/Main/Save" to="." method="_on_q_save_pressed"]
-[connection signal="pressed" from="UI/Track/Main/Test" to="." method="_on_test_pressed"]
-[connection signal="value_changed" from="UI/Track/Main/SubStart" to="UI" method="_on_sub_start_value_changed"]
-[connection signal="text_submitted" from="UI/Track/Main/SubStart/Text" to="UI" method="_on_sub_start_text_submitted"]
-[connection signal="value_changed" from="UI/Track/Main/SubEnd" to="UI" method="_on_sub_end_value_changed"]
-[connection signal="text_submitted" from="UI/Track/Main/SubEnd/Text" to="UI" method="_on_sub_end_text_submitted"]
-[connection signal="pressed" from="UI/Track/Main/Add" to="UI" method="_on_sub_add_pressed"]
-[connection signal="scroll_ended" from="UI/Track/Sub/Scroll" to="UI" method="_on_scroll_scroll_ended"]
-[connection signal="pressed" from="UI/Track/Sub/New" to="UI" method="_on_sub_new_pressed"]
-[connection signal="pressed" from="UI/Track/Sub/Toggle" to="UI" method="_on_sub_toggle_pressed"]
-[connection signal="pressed" from="UI/Track/Sub/Remove" to="UI" method="_on_sub_remove_pressed"]
-[connection signal="pressed" from="UI/Track/Sub/Update" to="UI" method="_on_sub_update_pressed"]
-[connection signal="pressed" from="UI/Track/File/New" to="UI" method="_on_file_new_pressed"]
-[connection signal="pressed" from="UI/Track/File/Remove" to="." method="_on_file_remove_pressed"]
-[connection signal="pressed" from="UI/Track/File/Load" to="." method="load_file"]
-[connection signal="pressed" from="UI/Track/File/Save" to="." method="_on_save_pressed"]
+[connection signal="value_changed" from="UI/Configs/Frequency" to="UI" method="_on_frequency_value_changed"]
+[connection signal="item_selected" from="UI/Configs/Frequency/Tone" to="UI" method="_on_tone_item_selected"]
+[connection signal="value_changed" from="UI/Configs/Volume" to="UI" method="_on_volume_value_changed"]
+[connection signal="text_submitted" from="UI/Configs/Volume/Text" to="UI" method="_on_volume_text_submitted"]
+[connection signal="value_changed" from="UI/Main/Main" to="UI" method="_on_main_value_changed"]
+[connection signal="text_submitted" from="UI/Main/Main/Start" to="UI" method="_on_main_start_text_submitted"]
+[connection signal="text_submitted" from="UI/Main/Main/End" to="UI" method="_on_main_end_text_submitted"]
+[connection signal="pressed" from="UI/Main/Save" to="." method="_on_q_save_pressed"]
+[connection signal="pressed" from="UI/Main/Test" to="." method="_on_test_pressed"]
+[connection signal="value_changed" from="UI/Main/SubStart" to="UI" method="_on_sub_start_value_changed"]
+[connection signal="text_submitted" from="UI/Main/SubStart/Text" to="UI" method="_on_sub_start_text_submitted"]
+[connection signal="value_changed" from="UI/Main/SubEnd" to="UI" method="_on_sub_end_value_changed"]
+[connection signal="text_submitted" from="UI/Main/SubEnd/Text" to="UI" method="_on_sub_end_text_submitted"]
+[connection signal="pressed" from="UI/Main/Add" to="UI" method="_on_sub_add_pressed"]
+[connection signal="scroll_ended" from="UI/Sub/Scroll" to="UI" method="_on_scroll_scroll_ended"]
+[connection signal="pressed" from="UI/Sub/New" to="UI" method="_on_sub_new_pressed"]
+[connection signal="pressed" from="UI/Sub/Toggle" to="UI" method="_on_sub_toggle_pressed"]
+[connection signal="pressed" from="UI/Sub/Remove" to="UI" method="_on_sub_remove_pressed"]
+[connection signal="pressed" from="UI/Sub/Update" to="UI" method="_on_sub_update_pressed"]
+[connection signal="pressed" from="UI/File/New" to="UI" method="_on_file_new_pressed"]
+[connection signal="pressed" from="UI/File/Remove" to="." method="_on_file_remove_pressed"]
+[connection signal="pressed" from="UI/File/Load" to="." method="load_file"]
+[connection signal="pressed" from="UI/File/Save" to="." method="_on_save_pressed"]

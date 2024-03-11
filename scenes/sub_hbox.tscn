@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwtvejcieqhln"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rdvkj"]
+size = Vector2(768, 32)
+
+[node name="Default" type="HBoxContainer"]
+
+[node name="Area" type="Area2D" parent="."]
+
+[node name="Collision" type="CollisionShape2D" parent="Area"]
+position = Vector2(384, 16)
+shape = SubResource("RectangleShape2D_rdvkj")
+
+[node name="Name" type="LineEdit" parent="."]
+layout_mode = 2
+text = "Default"
+expand_to_text_length = true
+deselect_on_focus_loss_enabled = false
+select_all_on_focus = true
+
+[node name="Values" type="Button" parent="."]
+layout_mode = 2
+text = "(0, 1, 440.0, 0)"

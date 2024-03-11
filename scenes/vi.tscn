@@ -1,0 +1,117 @@
+[gd_scene load_steps=4 format=3 uid="uid://dfbjrr0wqcr15"]
+
+[ext_resource type="Script" path="res://scripts/sub_control.gd" id="1_vb3an"]
+[ext_resource type="PackedScene" uid="uid://ufxo30soh08n" path="res://scenes/sub.tscn" id="2_yksqv"]
+[ext_resource type="Script" path="res://scripts/vi_ui.gd" id="3_3whna"]
+
+[node name="VI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vb3an")
+
+[node name="SubBlocks" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Default" parent="SubBlocks" instance=ExtResource("2_yksqv")]
+offset_left = 928.0
+offset_top = 416.0
+offset_right = 1120.0
+offset_bottom = 608.0
+
+[node name="UI" type="CanvasLayer" parent="."]
+script = ExtResource("3_3whna")
+
+[node name="Track" type="HSlider" parent="UI"]
+offset_left = 32.0
+offset_top = 992.0
+offset_right = 672.0
+offset_bottom = 1056.0
+max_value = 1.0
+step = 0.01
+
+[node name="Start" type="Button" parent="UI/Track"]
+layout_mode = 0
+offset_top = -64.0
+offset_right = 128.0
+text = "0.0"
+
+[node name="End" type="LineEdit" parent="UI/Track"]
+layout_mode = 0
+offset_left = 512.0
+offset_top = -64.0
+offset_right = 640.0
+text = "1.0"
+alignment = 1
+
+[node name="New" type="Button" parent="UI/Track"]
+layout_mode = 0
+offset_left = 704.0
+offset_top = -64.0
+offset_right = 800.0
+text = "New"
+
+[node name="Remove" type="Button" parent="UI/Track"]
+layout_mode = 0
+offset_left = 704.0
+offset_right = 800.0
+offset_bottom = 64.0
+text = "Remove"
+
+[node name="Volume" type="HSlider" parent="UI"]
+offset_left = 928.0
+offset_top = 992.0
+offset_right = 1312.0
+offset_bottom = 1056.0
+max_value = 24.0
+step = 0.01
+
+[node name="Text" type="Button" parent="UI/Volume"]
+layout_mode = 0
+offset_left = 128.0
+offset_top = -64.0
+offset_right = 256.0
+text = "0"
+
+[node name="Frequency" type="HSlider" parent="UI"]
+offset_left = 1504.0
+offset_top = 992.0
+offset_right = 1888.0
+offset_bottom = 1056.0
+
+[node name="Text" type="LineEdit" parent="UI/Frequency"]
+layout_mode = 0
+offset_left = 64.0
+offset_top = -64.0
+offset_right = 192.0
+text = "440.0"
+alignment = 1
+
+[node name="Tone" type="OptionButton" parent="UI/Frequency"]
+layout_mode = 0
+offset_left = 192.0
+offset_top = -64.0
+offset_right = 320.0
+
+[node name="Connection" type="LineEdit" parent="UI"]
+offset_left = 736.0
+offset_top = 864.0
+offset_right = 864.0
+offset_bottom = 896.0
+placeholder_text = "Connection"
+
+[connection signal="child_entered_tree" from="SubBlocks" to="." method="_on_sub_blocks_child_entered_tree"]
+[connection signal="value_changed" from="UI/Track" to="UI" method="_on_track_value_changed"]
+[connection signal="text_submitted" from="UI/Track/End" to="UI" method="_on_end_text_submitted"]
+[connection signal="pressed" from="UI/Track/New" to="." method="_on_new_pressed"]
+[connection signal="pressed" from="UI/Track/Remove" to="." method="_on_remove_pressed"]
+[connection signal="value_changed" from="UI/Volume" to="UI" method="_on_volume_value_changed"]
+[connection signal="text_submitted" from="UI/Connection" to="." method="_on_connection_text_submitted"]

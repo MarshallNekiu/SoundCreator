@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://bswvryigric82"]
+
+[ext_resource type="Script" path="res://scripts/generator.gd" id="1_2j3xd"]
+
+[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_ekvdj"]
+mix_rate = 22050.0
+buffer_length = 0.15
+
+[node name="Generator" type="AudioStreamPlayer2D"]
+process_mode = 3
+stream = SubResource("AudioStreamGenerator_ekvdj")
+autoplay = true
+script = ExtResource("1_2j3xd")
+
+[node name="Time" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="Time" to="." method="_on_timer_timeout"]
