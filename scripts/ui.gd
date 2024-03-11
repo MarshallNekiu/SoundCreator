@@ -1,6 +1,13 @@
 extends Node2D
 
 
+var toggle_mode := false
+
+
+func _ready():
+	$Track/Sub/Toggle.connect("toggled", func (toggle: bool): toggle_mode = toggle)
+
+
 func _on_sub_start_text_submitted(new_text: String):
 	$Track/Main/SubStart.set_value_no_signal(new_text.to_float())
 

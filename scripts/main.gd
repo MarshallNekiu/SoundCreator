@@ -11,6 +11,12 @@ var frequency:Array[float] = [32.7032, 34.6479, 36.7081, 38.8909, 41.2035, 43.65
 var directory := DirAccess.open(OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS))
 
 
+func debug_notify(notif := ""):
+	%Debug.add_child(Label. new(), true)
+	%Debug.get_child(-1).text = notif
+	if %Debug.get_child_count() > 10:
+		%Debug.remove_child(%Debug.get_child(0))
+
 func _init():
 	for i in range(5 * 12 - 12): frequency.append(frequency[int(i) % 12] * (2 ** ( (i / 12) + 1) ) )
 	
@@ -30,6 +36,7 @@ func _ready():
 	$UI/Track/Main/Configs/Frequency.value = frequency.size() / 2
 	
 	if not FileAccess.file_exists(directory.get_current_dir() + "/data/Default.txt"):
+		debug_notify("./data empty. Creating Default...")
 		var test := FileAccess.open(directory.get_current_dir() + "/data/Default.txt", FileAccess.WRITE)
 		test.store_string("effect_list ?0 Default ?2 sin(phase * TAU) ?2 (0, 1, 440, 0) ?1 Sub ?2 sin(phase * TAU) * exp(-time) ?2 (0.1, 0.3, 440, 0) ?3 (0.5, 0.7, 440, 0)")
 		test.close()
@@ -38,6 +45,7 @@ func _ready():
 		if i == "Default.txt": continue
 		await $UI.call("_on_file_new_pressed")
 		$UI/Track/File/Scroll/VBox.get_child(-1).get_node("Name").text = i.get_slice(".", 0)
+		debug_notify(i + " Loaded")
 	
 	load_file()
 	
@@ -46,12 +54,15 @@ func _ready():
 
 
 func _input(event):
+	if event is InputEventScreenDrag:
+		$Camera.position += event.relative * 2
+	
 	$UI/Track/Sub/Line2D.global_position.y = clamp(ActualEffect.global_position.y + 8, 80, 480)
 	$UI/Track/File/Line2D.global_position.y = clamp(actual_file.global_position.y + 8, 80, 480)
 	
 	if event is InputEventKey or event is InputEventMouse:
 		if DisplayServer.virtual_keyboard_get_height() > 0:
-			$Camera.zoom.y = 0.6
+			$Camera.zoom.y = 1.0
 		else:
 			$Camera.zoom.y = 1.0
 	
@@ -63,9 +74,11 @@ func _input(event):
 func _on_mouse_area_entered(area: Area2D):
 	match str(area.get_path()).get_slice("/", 5):
 		"Sub":
+			debug_notify("Actual Sub: " + ActualEffect.name + " -> " + area.get_parent().name)
 			ActualEffect = area.get_parent()
 			$UI/Track/Sub/Code.text = effect_list[ActualEffect.name]
 		"File":
+			debug_notify("Actual File: " + actual_file.name + " -> " + area.get_parent().name)
 			actual_file = area.get_parent()
 
 
@@ -73,6 +86,7 @@ func new_file():
 	var newfile := FileAccess.open(directory.get_current_dir() + "/data/" + $UI/Track/File/Scroll/VBox.get_child(-1).name + ".txt", FileAccess.WRITE)
 	newfile.store_string("effect_list ?0 Default ?2 sin(phase * TAU) ?2 (0, 1, 440, 0)")
 	newfile.close()
+	debug_notify("File Created")
 
 
 func load_file():
@@ -104,6 +118,7 @@ func load_file():
 					for k in j.get_slice(" ?2 ", 2).split(" ?3 "):
 						await $UI.call("_on_sub_add_pressed")
 						$UI/Track/Sub/Scroll/VBox.get_child(-1).get_child(-1).text = k
+	debug_notify("File Loaded: " + actual_file.name)
 
 
 func _on_file_remove_pressed():
@@ -111,17 +126,25 @@ func _on_file_remove_pressed():
 	var to_remove := actual_file
 	actual_file = $UI/Track/File/Scroll/VBox/Default
 	directory.remove("./data/" + to_remove.name + ".txt")
+	debug_notify("File Removed: " + to_remove.name)
 	to_remove.queue_free()
 
 
 func _on_test_pressed():
-	$Audio/Main.executer.parse(effect_list["Default"])
-	$UI/Track/Sub/Scroll/VBox/Default/Values.text = str(Vector4($UI/Track/Main/Main.value, $UI/Track/Main/Main/End.text.to_float(), $UI/Track/Main/Configs/Frequency/Text.text.to_float(), $UI/Track/Main/Configs/Volume.value))
-	$Audio/Main.hz = $UI/Track/Sub/Scroll/VBox/Default/Values.text.get_slice(",", 2).to_float()
-	$Audio/Main.time_start = $UI/Track/Sub/Scroll/VBox/Default/Values.text.get_slice(",", 0).get_slice("(", 0).to_float()
-	$Audio/Main.time_end = $UI/Track/Sub/Scroll/VBox/Default/Values.text.get_slice(",", 1).to_float()
-	$Audio/Main.volume_db = $UI/Track/Sub/Scroll/VBox/Default/Values.text.get_slice(",", 3).get_slice(")", 0).to_float()
-	$Audio/Main.call("create_track")
+	for i in $Audio.get_children():
+		i.queue_free()
+	
+	for sub in $UI/Track/Sub/Scroll/VBox.get_children():
+		for Values in sub.get_children().filter(func (x): return "Values" in x.name):
+			var audio: AudioStreamPlayer2D = preload("res://scenes/generator.tscn").instantiate()
+			audio.name = sub.name
+			var values := Vector4(Values.text.get_slice(",", 0).get_slice("(", 0).to_float(), Values.text.get_slice(",", 1).to_float(), Values.text.get_slice(",", 2).to_float(), Values.text.get_slice(",", 3).get_slice(")", 0).to_float())
+			audio.executer.parse(effect_list[sub.name])
+			audio.hz = values.z
+			audio.time_start = 0
+			audio.time_end = values.y
+			audio.volume_db = values.w
+			get_tree().create_timer(values.x + 1).connect("timeout", func (): $Audio.add_child(audio))
 
 
 func _on_q_save_pressed():
@@ -143,6 +166,7 @@ func _on_q_save_pressed():
 	var file := FileAccess.open(directory.get_current_dir() + "/data/" + selected_file.name + ".txt", FileAccess.WRITE)
 	file.store_string(data)
 	file.close()
+	debug_notify("Data Saved at " + selected_file.name)
 
 
 func _on_save_pressed():
@@ -150,6 +174,19 @@ func _on_save_pressed():
 	selected_file = actual_file
 	await _on_q_save_pressed()
 	selected_file = x
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
