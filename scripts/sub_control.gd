@@ -1,40 +1,75 @@
 extends Control
 
 @onready var sub:Control = $SubBlocks/Default
+var time = 0
+var times: Array[float]
+var connections: Dictionary
+
+
+func _on_connect(node_connections: Dictionary):
+	for i in node_connections:
+		if not connections.has(i):
+			connections.merge({i: node_connections[i]})
+		else:
+			for j in node_connections[i]:
+				if not connections[i].has(j):
+					connections[i].append(j)
+	OS.alert(str(connections), "Connect")
+
+
+func _on_disconnect(node_connections:Dictionary):
+	for i in node_connections:
+		if connections.has(i):
+			for j in node_connections[i]:
+				if connections[i].has(j):
+					connections[i].erase(j)
+	OS.alert(str(connections), "Disconnect")
+
+
+func _on_debug(data):
+	if not has_node("Window"):
+		var window := Window.new()
+		window.size = get_viewport_rect().size * 0.5
+		window.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
+		add_child(window, true)
+		window.connect("close_requested", func (): window.queue_free())
+		var text := TextEdit.new()
+		text.size = window.size
+		window.add_child(text, true)
+	
+	await get_tree().create_timer(0.1).timeout
+	
+	$Window/TextEdit.text += str(data) + "\n\n"
 
 
 func _ready():
-	await get_tree().create_timer(0.1).timeout
-	
 	$SubBlocks/Default/Box/ScrollBox/VBox/HBox/Connection.emit_signal("pressed")
-	$SubBlocks/Default.call("add_connection", $UI/Connection.text, $SubBlocks/Default/Box/ScrollBox/VBox/HBox)
-	$SubBlocks/Default.call("create")
+	$SubBlocks/Default/Box/ScrollBox/VBox/HBox/AddConnection.text = "Default2"
+	$SubBlocks/Default/Box/ScrollBox/VBox/HBox/AddConnection.emit_signal("text_submitted", "Default2")
 	
+	$SubBlocks/Default2/Box/ScrollBox/VBox/HBox/Time.text = "2.0"
+	$SubBlocks/Default2/Box/ScrollBox/VBox/HBox/Time.emit_signal("text_sumbmitted", "2.0")
 	$SubBlocks/Default2/Box/ScrollBox/VBox/HBox/Connection.emit_signal("pressed")
-	$SubBlocks/Default2.call("add_connection", "Default", $SubBlocks/Default2/Box/ScrollBox/VBox/HBox)
-	$SubBlocks/Default2.call("create")
+	$SubBlocks/Default2/Box/ScrollBox/VBox/HBox/AddConnection.text = "Default"
+	$SubBlocks/Default2/Box/ScrollBox/VBox/HBox/AddConnection.emit_signal("text_submitted", "Default")
+
+
+func _on_focus(node: Control):
+	if not is_instance_valid(sub): return
+	sub.modulate = Color.DIM_GRAY
+	sub = node
+	sub.modulate = Color.WHITE
 
 
 func _on_sub_blocks_child_entered_tree(node: Control):
-	node.connect("focused", func ():
-		if not is_instance_valid(sub): return
-		sub.modulate = Color.GRAY
-		sub = node
-		sub.modulate = Color.WHITE
-		refresh_values(sub.get_node("Box/Values").text)
-		$UI/MixRate.set_value_no_signal(sub.get_node("Generator").stream.mix_rate)
-		$UI/MixRate/Text.text = str($UI/MixRate.value)
-		)
-	
-	node.emit_signal("focused")
-	
-	node.get_node("Box/ScrollBox/VBox").connect("child_entered_tree", func(hbox: Control):
-		if hbox.is_in_group("HBox"):
-			hbox.get_node("Control/Add").connect("pressed", func (): node.call("add_connection", $UI/Connection.text, hbox)) )
+	node.connect("connect", _on_connect)
+	node.connect("disconnect", _on_disconnect)
+	node.connect("debug", _on_debug)
+	node.connect("focused", _on_focus)
+	node.emit_signal("focused", node)
 
 
-func refresh_values(values: String):
-	var vals := Vector4(values.get_slice(",", 0).erase(0, 1).to_float(), values.get_slice(",", 1).to_float(), values.get_slice(",", 2).to_float(), values.get_slice(",", 3).get_slice(")", 0).to_float())
+func refresh_values(vals: Vector4):
 	$UI/Track.max_value = vals.y
 	$UI/Track/Start.text = str(vals.x)
 	$UI/Track.set_value_no_signal(vals.x)
@@ -46,7 +81,7 @@ func refresh_values(values: String):
 
 func _on_new_pressed():
 	var new_sub = preload("res://scenes/sub.tscn").instantiate()
-	new_sub.position += Vector2(512, 512)
+	new_sub.position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
 	$SubBlocks.add_child(new_sub, true)
 
 
@@ -56,8 +91,6 @@ func _on_remove_pressed():
 	sub = $SubBlocks/Default
 	sub.emit_signal("focused")
 	x.queue_free()
-
-
 
 
 
