@@ -1,9 +1,29 @@
-[gd_scene load_steps=5 format=3 uid="uid://dfbjrr0wqcr15"]
+[gd_scene load_steps=11 format=3 uid="uid://dfbjrr0wqcr15"]
 
 [ext_resource type="Script" path="res://scripts/sub_control.gd" id="1_vb3an"]
 [ext_resource type="PackedScene" uid="uid://ufxo30soh08n" path="res://scenes/sub.tscn" id="2_yksqv"]
 [ext_resource type="Script" path="res://scripts/vi_ui.gd" id="3_3whna"]
 [ext_resource type="CodeHighlighter" uid="uid://cfmnwvnrmglab" path="res://data/code_syntax.tres" id="4_n2fws"]
+[ext_resource type="PackedScene" uid="uid://bswvryigric82" path="res://scenes/generator.tscn" id="5_x60ft"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_mshfk"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_fiudi"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_k6lru"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_g0q7t"]
+content_margin_top = 0.0
+grow_begin = -2.0
+grow_end = -2.0
+thickness = 8
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_a0nvv"]
+content_margin_top = 0.0
+color = Color(1, 1, 1, 1)
+grow_begin = -2.0
+grow_end = -2.0
+thickness = 8
 
 [node name="VI" type="Control"]
 layout_mode = 3
@@ -46,11 +66,13 @@ offset_bottom = 1056.0
 max_value = 1.0
 step = 0.01
 
-[node name="Start" type="Button" parent="UI/Track"]
+[node name="Start" type="LineEdit" parent="UI/Track"]
 layout_mode = 0
 offset_top = -64.0
 offset_right = 128.0
 text = "0.0"
+alignment = 1
+max_length = 6
 
 [node name="End" type="LineEdit" parent="UI/Track"]
 layout_mode = 0
@@ -59,6 +81,7 @@ offset_top = -64.0
 offset_right = 640.0
 text = "1.0"
 alignment = 1
+max_length = 6
 
 [node name="New" type="Button" parent="UI/Track"]
 layout_mode = 0
@@ -119,11 +142,33 @@ max_value = 44100.0
 step = 5.0
 value = 22050.0
 
-[node name="Text" type="Button" parent="UI/MixRate"]
+[node name="Text" type="LineEdit" parent="UI/MixRate"]
 layout_mode = 0
 offset_top = -64.0
 offset_right = 128.0
 text = "22050"
+max_length = 5
+virtual_keyboard_type = 2
+
+[node name="List" type="OptionButton" parent="UI/MixRate"]
+layout_mode = 0
+offset_left = 128.0
+offset_top = -64.0
+offset_right = 256.0
+item_count = 6
+selected = 2
+popup/item_0/text = "8000"
+popup/item_0/id = 0
+popup/item_1/text = "11025"
+popup/item_1/id = 1
+popup/item_2/text = "22050"
+popup/item_2/id = 2
+popup/item_3/text = "32000"
+popup/item_3/id = 3
+popup/item_4/text = "44100"
+popup/item_4/id = 4
+popup/item_5/text = "48000"
+popup/item_5/id = 5
 
 [node name="Connection" type="LineEdit" parent="UI"]
 offset_left = 736.0
@@ -154,6 +199,26 @@ gutters_draw_line_numbers = true
 indent_automatic = true
 auto_brace_completion_enabled = true
 auto_brace_completion_highlight_matching = true
+
+[node name="Generator" parent="." instance=ExtResource("5_x60ft")]
+
+[node name="Track" type="HSlider" parent="Generator"]
+offset_left = 256.0
+offset_top = 32.0
+offset_right = 1696.0
+offset_bottom = 64.0
+theme_override_icons/grabber = SubResource("ImageTexture_mshfk")
+theme_override_icons/grabber_highlight = SubResource("ImageTexture_fiudi")
+theme_override_icons/grabber_disabled = SubResource("ImageTexture_k6lru")
+theme_override_styles/slider = SubResource("StyleBoxLine_g0q7t")
+theme_override_styles/grabber_area = SubResource("StyleBoxLine_a0nvv")
+max_value = 2.0
+step = 0.01
+editable = false
+
+[node name="Track" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
 
 [connection signal="child_entered_tree" from="SubBlocks" to="." method="_on_sub_blocks_child_entered_tree"]
 [connection signal="value_changed" from="UI/Track" to="UI" method="_on_track_value_changed"]
